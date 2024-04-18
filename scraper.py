@@ -23,21 +23,23 @@ def extract_next_links(url, resp):
     # check if resp is none
     if resp is None or resp.raw_response is None:
         return scrapedLinks
-
-    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     
-    # finding all the <a> elements (links) in the HTML file (Note: loops and traps are not handled)
-    for linkElement in soup.find_all("a"): 
-        if linkElement and linkElement.get("href"):
-            linkURL = linkElement.get("href")
-            if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
-                if linkURL == "/" :
-                    continue
-                elif linkURL.startswith("//") : # (2 slashes)  replaces url from the hostname onward
-                    linkURL = f"https:{linkURL}"
-                elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
-                    linkURL = f"{url}{linkURL}"
-                scrapedLinks.append(linkURL)
+    # check if resp.status is 200
+    if resp.status == 200:
+        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+        
+        # finding all the <a> elements (links) in the HTML file (Note: loops and traps are not handled)
+        for linkElement in soup.find_all("a"): 
+            if linkElement and linkElement.get("href"):
+                linkURL = linkElement.get("href")
+                if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
+                    if linkURL == "/" :
+                        continue
+                    elif linkURL.startswith("//") : # (2 slashes)  replaces url from the hostname onward
+                        linkURL = f"https:{linkURL}"
+                    elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
+                        linkURL = f"{url}{linkURL}"
+                    scrapedLinks.append(linkURL)
 
     return scrapedLinks 
 
