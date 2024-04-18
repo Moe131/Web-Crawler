@@ -1,5 +1,8 @@
 import re
 from urllib.parse import urlparse
+from urllib.robotparser import RobotFileParser
+from bs4 import BeautifulSoup
+
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -25,6 +28,8 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
+        if not isScrapable(url) :
+            return False
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
@@ -38,3 +43,21 @@ def is_valid(url):
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
+def isScrapable(url):
+    """ This method checks the /robots.txt of a url and returns True if
+        we are allowed to scrape it and False otherwise"""
+    try:
+        hostPath = removePath(url)
+        rbParser = RobotFileParser()
+        rbParser.set_url(hostPath+"/robots.txt")
+        rbParser.read()
+        return rbParser.can_fetch("*", url)
+    except Exception as e:
+        return False
+
+def removePath(url):
+    """ This method keep the host name of the domain and reomves
+      all the remaining path"""
+    parsedURL = urlparse(url)
+    return f"{parsedURL.scheme}://{parsedURL.netloc}"
