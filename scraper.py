@@ -39,7 +39,10 @@ def extract_next_links(url, resp):
                         linkURL = f"https:{linkURL}"
                     elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
                         linkURL = f"{url}{linkURL}"
-                    scrapedLinks.append(linkURL)
+                    
+                    # check if URL is valid
+                    if is_valid(linkURL):
+                        scrapedLinks.append(linkURL)
 
     return scrapedLinks 
 
