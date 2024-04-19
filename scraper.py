@@ -6,7 +6,9 @@ from bs4 import BeautifulSoup
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
+    # wordFrequencies = find_word_frquency(url, resp)
     return [link for link in links if is_valid(link)]
+
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -20,28 +22,28 @@ def extract_next_links(url, resp):
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
     scrapedLinks = list()
 
-    # check if resp is none
-    if resp is None or resp.raw_response is None:
-        return scrapedLinks
-    
-    # check if resp.status is 200
-    if resp.status == 200:
-        soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+    # if resp.status is not 200 return 
+    if resp.status != 200:
+        return list()
+
+    scrapedLinks = list()    
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
         
-        # finding all the <a> elements (links) in the HTML file (Note: loops and traps are not handled)
-        for linkElement in soup.find_all("a"): 
-            if linkElement and linkElement.get("href"):
-                linkURL = linkElement.get("href")
-                if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
-                    if linkURL == "/" :
-                        continue
-                    elif linkURL.startswith("//") : # (2 slashes)  replaces url from the hostname onward
-                        linkURL = f"https:{linkURL}"
-                    elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
-                        linkURL = f"{url}{linkURL}"
-                    scrapedLinks.append(linkURL)
+    # finding all the <a> elements (links) in the HTML file (Note: loops and traps are not handled)
+    for linkElement in soup.find_all("a"): 
+        if linkElement and linkElement.get("href"):
+            linkURL = linkElement.get("href")
+            if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
+                if linkURL == "/" :
+                    continue
+                elif linkURL.startswith("//") : # (2 slashes)  replaces url from the hostname onward
+                    linkURL = f"https:{linkURL}"
+                elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
+                    linkURL = f"{url}{linkURL}"
+                scrapedLinks.append(linkURL)
 
     return scrapedLinks 
+
 
 def is_valid(url):
     # Decide whether to crawl this url or not. 
@@ -67,6 +69,21 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
+
+def find_word_frquency(url, resp) ->  dict :
+    """ Reads the content of a URL and returns a dictionary
+        with words and their frequencies in that page """
+    
+     # if resp.status is not 200 return 
+    if resp.status != 200:
+        return dict()
+    
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+    # finding all the elements in the HTML file and getting their texts
+    listOfWords = tokenize(soup.get_text())
+    return computeWordFrequencies(listOfWords)
+
+
 def isScrapable(url):
     """ This method checks the /robots.txt of a url and returns True if
         we are allowed to scrape it and False otherwise"""
@@ -78,6 +95,7 @@ def isScrapable(url):
         return rbParser.can_fetch("*", url)
     except Exception as e:
         return False
+
 
 def removePath(url):
     """ This method keep the host name of the domain and reomves
