@@ -4,6 +4,7 @@ from urllib.robotparser import RobotFileParser
 from bs4 import BeautifulSoup
 from tokenizer import *
 
+commonWords = {}
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -100,7 +101,14 @@ def find_word_frquency(url, resp) ->  dict :
 
 def top_words(dict):
     """ Finds the 50 most common words in the entire set of pages """
-    pass
+    for word in dict:
+        for k, v in word.items():
+            if k in commonWords:
+                commonWords[k] += v
+            else:
+                commonWords[k] = v
+    # sorted the dictionary and obtains the 50 most common words
+    return sorted(commonWords.items(), key=lambda x: x[1], reverse=True)[:50]
 
 
 def isScrapable(url):
