@@ -2,7 +2,7 @@ import re
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
 from bs4 import BeautifulSoup
-from tokenize import *
+from tokenizer import *
 
 
 def scraper(url, resp):
@@ -95,6 +95,7 @@ def find_word_frquency(url, resp) ->  dict :
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     # finding all the elements in the HTML file and getting their texts
     listOfWords = tokenize(soup.get_text())
+    top_words(computeWordFrequencies(listOfWords))
     return computeWordFrequencies(listOfWords)
 
 def top_words(dict):
