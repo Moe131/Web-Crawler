@@ -7,7 +7,7 @@ from tokenize import *
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
-    # wordFrequencies = find_word_frquency(url, resp)
+    #wordFrequencies = find_word_frquency(url, resp)
     return [link for link in links if is_valid(link)]
 
 
@@ -96,6 +96,10 @@ def find_word_frquency(url, resp) ->  dict :
     # finding all the elements in the HTML file and getting their texts
     listOfWords = tokenize(soup.get_text())
     return computeWordFrequencies(listOfWords)
+
+def top_words(dict):
+    """ Finds the 50 most common words in the entire set of pages """
+    pass
 
 
 def isScrapable(url):
