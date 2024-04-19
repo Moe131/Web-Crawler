@@ -2,6 +2,7 @@ import re
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
 from bs4 import BeautifulSoup
+from tokenize import *
 
 
 def scraper(url, resp):
