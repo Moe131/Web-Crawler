@@ -56,6 +56,8 @@ def is_valid(url):
             return False
         if not isScrapable(url) :
             return False
+        if not isWithinDomain(url):
+            return False
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
@@ -70,6 +72,17 @@ def is_valid(url):
         print ("TypeError for ", parsed)
         raise
 
+
+def isWithinDomain(url):
+    """ Checks if the URL is within *.ics.uci.edu/* ,  *.cs.uci.edu/* ,and
+      *.informatics.uci.edu/* , *.stat.uci.edu/* domains """
+    parsed = urlparse(url)
+    hostPath = parsed.netloc
+    if not ( ("ics.uci.edu" in hostPath) or ("cs.uci.edu" in hostPath) or 
+            ("informatics.uci.edu" in hostPath) or ("stat.uci.edu" in hostPath) ):
+        return False
+    else:
+        return True
 
 def find_word_frquency(url, resp) ->  dict :
     """ Reads the content of a URL and returns a dictionary
