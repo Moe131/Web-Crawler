@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from tokenizer import *
 
 commonWords = {}
+uniqueURLs = {} # unique pages
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
@@ -43,6 +44,7 @@ def extract_next_links(url, resp):
                 elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
                     linkURL = f"{url}{linkURL}"
                 scrapedLinks.append(linkURL)
+                uniqueURLs.add(linkURL) # add URL to a set to track number of unique URLs
 
     return scrapedLinks 
 
@@ -55,7 +57,7 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        if not isScrapable(url) :
+        if not isScrapable(url):
             return False
         if not isWithinDomain(url):
             return False
