@@ -25,7 +25,7 @@ def extract_next_links(url, resp):
     scrapedLinks = list()
 
     # if resp.status is not 200 return 
-    if resp.status != 200:
+    if resp.status != 200 or resp.raw_response is None:
         return list()
 
     scrapedLinks = list()    
@@ -55,6 +55,8 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
+        #if repetitive(url):
+            #return False
         if not isScrapable(url):
             return False
         if not isWithinDomain(url):
@@ -122,7 +124,26 @@ def isScrapable(url):
         return rbParser.can_fetch("*", url)
     except Exception as e:
         return False
+    
+def repetitive(url):
+    """ Checks for repeating segments Note! this is a work in progress. """
+    sectionDict = {}
+    parsed = urlparse(url).path
+    section = parsed.strip("/").split("/")
+    current = None
+    for i in section:
+        if i == current:
+            if i in sectionDict:
+                sectionDict[i] += 1
+            else:
+                sectionDict[i] = 1
+            if sectionDict[i] > 3:
+                return True
+        else:
+            sectionDict[i] = 0
 
+        current = i
+    return False
 
 def removePath(url):
     """ This method keep the host name of the domain and reomves
