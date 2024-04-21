@@ -5,11 +5,17 @@ from bs4 import BeautifulSoup
 from tokenizer import *
 
 commonWords = {}
+uniqueURLs = set()
+
 
 def scraper(url, resp):
+    # if retrieving the page was NOT successful return empty list of links
+    if resp.status != 200 or resp.raw_response is None:
+        return list()
+    count_if_unique(url)
     links = extract_next_links(url, resp)
     add_words(find_word_frquency(url, resp))
-    createSummaryFile()  ## later we should we this to the 
+    createSummaryFile()  # later we should we move this to the end of launch.py
     return [link for link in links if is_valid(link)]
 
 
@@ -23,12 +29,6 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    scrapedLinks = list()
-
-    # if resp.status is not 200 return 
-    if resp.status != 200 or resp.raw_response is None:
-        return list()
-
     scrapedLinks = list()    
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
         
@@ -57,11 +57,11 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        if repetitive(url):
+        if repetitive(parsed):
             return False
         if not isScrapable(url):
             return False
-        if not isWithinDomain(url):
+        if not isWithinDomain(parsed):
             return False
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -78,11 +78,10 @@ def is_valid(url):
         raise
 
 
-def isWithinDomain(url):
+def isWithinDomain(parsedURL):
     """ Checks if the URL is within *.ics.uci.edu/* ,  *.cs.uci.edu/* ,and
       *.informatics.uci.edu/* , *.stat.uci.edu/* domains """
-    parsed = urlparse(url)
-    hostPath = parsed.netloc
+    hostPath = parsedURL.netloc
     if not ( ("ics.uci.edu" in hostPath) or ("cs.uci.edu" in hostPath) or 
             ("informatics.uci.edu" in hostPath) or ("stat.uci.edu" in hostPath) ):
         return False
@@ -109,6 +108,8 @@ def createSummaryFile():
         summaryfile.write("The top 50 common words in the crawled URLs are :\n")
         for word, count in top_words():
             summaryfile.write(f"{word} : {count}\n")
+        summaryfile.write("\nTotal Unique URLs found : ")
+        summaryfile.write(str(len(uniqueURLs)))
 
 
 def add_words(dictionary):
@@ -121,6 +122,10 @@ def add_words(dictionary):
             commonWords[word] = count
 
 
+def count_if_unique(url):
+    parsed = urlparse(url)
+    urldeletedFragment = parsed._replace(fragment = "").geturl() 
+    uniqueURLs.add(urldeletedFragment)
 
 def top_words():
     """ Finds the 50 most common words in the entire set of pages """
@@ -140,10 +145,10 @@ def isScrapable(url):
     except Exception as e:
         return False
     
-def repetitive(url):
+def repetitive(parsedURL):
     """ Checks for repeating segments Note! this is a work in progress. """
     sectionDict = {}
-    parsed = urlparse(url).path
+    parsed = parsedURL.path
     section = parsed.strip("/").split("/")
     current = None
     for i in section:
@@ -151,9 +156,8 @@ def repetitive(url):
             sectionDict[i] += 1
         else:
             sectionDict[i] = 1
-
     # check section repeats
-    if any(count > 3 for count in sectionDict.values()):
+    if any(count >= 3 for count in sectionDict.values()):
         return True
 
     return False
