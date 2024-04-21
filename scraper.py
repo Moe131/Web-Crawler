@@ -8,7 +8,8 @@ commonWords = {}
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
-    #wordFrequencies = find_word_frquency(url, resp)
+    add_words(find_word_frquency(url, resp))
+    createSummaryFile()  ## later we should we this to the 
     return [link for link in links if is_valid(link)]
 
 
@@ -38,9 +39,9 @@ def extract_next_links(url, resp):
             if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
                 if linkURL == "/" :
                     continue
-                elif linkURL.startswith("//") : # (2 slashes)  replaces url from the hostname onward
+                elif linkURL.startswith("//") : # (2 slashes)  to handled absolute paths
                     linkURL = f"https:{linkURL}"
-                elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
+                elif linkURL.startswith("/") : # (1 slash) to handle relative path
                     linkURL = f"{url}{linkURL}"
 
                 scrapedLinks.append(linkURL)
@@ -91,25 +92,38 @@ def isWithinDomain(url):
 def find_word_frquency(url, resp) ->  dict :
     """ Reads the content of a URL and returns a dictionary
         with words and their frequencies in that page """
-    
      # if resp.status is not 200 return 
     if resp.status != 200:
-        return dict()
-    
+        return dict() 
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     # finding all the elements in the HTML file and getting their texts
     listOfWords = tokenize(soup.get_text())
-    top_words(computeWordFrequencies(listOfWords))
     return computeWordFrequencies(listOfWords)
 
-def top_words(dict):
+
+def createSummaryFile():
+    """ Creates summary.txt with the numer of unique URLs and the
+        top 50 words in the crawled pages """
+    with open("summary.txt" , 'w') as summaryfile:
+        # sorted the dictionary and obtains the 50 most common words
+        summaryfile.write("The top 50 common words in the crawled URLs are :\n")
+        for word, count in top_words():
+            summaryfile.write(f"{word} : {count}\n")
+
+
+def add_words(dictionary):
+    """ adds the words and their counts of each URL to the global dictionary  """
+    # update the commonWords dictionary from summary.txt if its empty
+    for word, count in dictionary.items():
+        if word in commonWords:
+            commonWords[word] += count
+        else:
+            commonWords[word] = count
+
+
+
+def top_words():
     """ Finds the 50 most common words in the entire set of pages """
-    for word in dict:
-        for k, v in word.items():
-            if k in commonWords:
-                commonWords[k] += v
-            else:
-                commonWords[k] = v
     # sorted the dictionary and obtains the 50 most common words
     return sorted(commonWords.items(), key=lambda x: x[1], reverse=True)[:50]
 
