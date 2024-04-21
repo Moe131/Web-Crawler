@@ -57,16 +57,11 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-<<<<<<< HEAD
-=======
         if repetitive(parsed):
             return False
->>>>>>> dfd73ecf8725d926fcd862a20262fe2f97a29f72
         if not isScrapable(url):
             return False
         if not isWithinDomain(parsed):
-            return False
-        if repetitive(url):
             return False
         if too_deep(url):
             return False
