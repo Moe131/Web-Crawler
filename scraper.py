@@ -5,10 +5,17 @@ from bs4 import BeautifulSoup
 from tokenizer import *
 
 commonWords = {}
+uniqueURLs = set()
+
 
 def scraper(url, resp):
+    # if retrieving the page was NOT successful return empty list of links
+    if resp.status != 200 or resp.raw_response is None:
+        return list()
+    count_if_unique(url)
     links = extract_next_links(url, resp)
-    #wordFrequencies = find_word_frquency(url, resp)
+    add_words(find_word_frquency(url, resp))
+    createSummaryFile()  # later we should we move this to the end of launch.py
     return [link for link in links if is_valid(link)]
 
 
@@ -22,12 +29,6 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    scrapedLinks = list()
-
-    # if resp.status is not 200 return 
-    if resp.status != 200 or resp.raw_response is None:
-        return list()
-
     scrapedLinks = list()    
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
         
@@ -38,9 +39,9 @@ def extract_next_links(url, resp):
             if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
                 if linkURL == "/" :
                     continue
-                elif linkURL.startswith("//") : # (2 slashes)  replaces url from the hostname onward
+                elif linkURL.startswith("//") : # (2 slashes)  to handled absolute paths
                     linkURL = f"https:{linkURL}"
-                elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
+                elif linkURL.startswith("/") : # (1 slash) to handle relative path
                     linkURL = f"{url}{linkURL}"
 
                 scrapedLinks.append(linkURL)
@@ -56,9 +57,14 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
+<<<<<<< HEAD
+=======
+        if repetitive(parsed):
+            return False
+>>>>>>> dfd73ecf8725d926fcd862a20262fe2f97a29f72
         if not isScrapable(url):
             return False
-        if not isWithinDomain(url):
+        if not isWithinDomain(parsed):
             return False
         if repetitive(url):
             return False
@@ -79,11 +85,10 @@ def is_valid(url):
         raise
 
 
-def isWithinDomain(url):
+def isWithinDomain(parsedURL):
     """ Checks if the URL is within *.ics.uci.edu/* ,  *.cs.uci.edu/* ,and
       *.informatics.uci.edu/* , *.stat.uci.edu/* domains """
-    parsed = urlparse(url)
-    hostPath = parsed.netloc
+    hostPath = parsedURL.netloc
     if not ( ("ics.uci.edu" in hostPath) or ("cs.uci.edu" in hostPath) or 
             ("informatics.uci.edu" in hostPath) or ("stat.uci.edu" in hostPath) ):
         return False
@@ -93,25 +98,44 @@ def isWithinDomain(url):
 def find_word_frquency(url, resp) ->  dict :
     """ Reads the content of a URL and returns a dictionary
         with words and their frequencies in that page """
-    
      # if resp.status is not 200 return 
     if resp.status != 200:
-        return dict()
-    
+        return dict() 
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
     # finding all the elements in the HTML file and getting their texts
     listOfWords = tokenize(soup.get_text())
-    top_words(computeWordFrequencies(listOfWords))
     return computeWordFrequencies(listOfWords)
 
-def top_words(dict):
+
+def createSummaryFile():
+    """ Creates summary.txt with the numer of unique URLs and the
+        top 50 words in the crawled pages """
+    with open("summary.txt" , 'w') as summaryfile:
+        # sorted the dictionary and obtains the 50 most common words
+        summaryfile.write("The top 50 common words in the crawled URLs are :\n")
+        for word, count in top_words():
+            summaryfile.write(f"{word} : {count}\n")
+        summaryfile.write("\nTotal Unique URLs found : ")
+        summaryfile.write(str(len(uniqueURLs)))
+
+
+def add_words(dictionary):
+    """ adds the words and their counts of each URL to the global dictionary  """
+    # update the commonWords dictionary from summary.txt if its empty
+    for word, count in dictionary.items():
+        if word in commonWords:
+            commonWords[word] += count
+        else:
+            commonWords[word] = count
+
+
+def count_if_unique(url):
+    parsed = urlparse(url)
+    urldeletedFragment = parsed._replace(fragment = "").geturl() 
+    uniqueURLs.add(urldeletedFragment)
+
+def top_words():
     """ Finds the 50 most common words in the entire set of pages """
-    for word in dict:
-        for k, v in word.items():
-            if k in commonWords:
-                commonWords[k] += v
-            else:
-                commonWords[k] = v
     # sorted the dictionary and obtains the 50 most common words
     return sorted(commonWords.items(), key=lambda x: x[1], reverse=True)[:50]
 
@@ -128,10 +152,10 @@ def isScrapable(url):
     except Exception as e:
         return False
     
-def repetitive(url):
+def repetitive(parsedURL):
     """ Checks for repeating segments Note! this is a work in progress. """
     sectionDict = {}
-    parsed = urlparse(url).path
+    parsed = parsedURL.path
     section = parsed.strip("/").split("/")
     current = None
     for i in section:
@@ -139,9 +163,8 @@ def repetitive(url):
             sectionDict[i] += 1
         else:
             sectionDict[i] = 1
-
     # check section repeats
-    if any(count > 3 for count in sectionDict.values()):
+    if any(count >= 3 for count in sectionDict.values()):
         return True
 
     return False
