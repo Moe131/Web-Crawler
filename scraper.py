@@ -56,8 +56,8 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        #if repetitive(url):
-            #return False
+        if repetitive(url):
+            return False
         if not isScrapable(url):
             return False
         if not isWithinDomain(url):
@@ -136,7 +136,7 @@ def repetitive(url):
         if i in sectionDict:
             sectionDict[i] += 1
         else:
-            section[i] = 1
+            sectionDict[i] = 1
 
     # check section repeats
     if any(count > 3 for count in sectionDict.values()):
