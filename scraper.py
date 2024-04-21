@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 from urllib.robotparser import RobotFileParser
 from bs4 import BeautifulSoup
 from tokenizer import *
@@ -43,8 +43,9 @@ def extract_next_links(url, resp):
                     linkURL = f"https:{linkURL}"
                 elif linkURL.startswith("/") : # (1 slash) to handle relative path
                     linkURL = f"{url}{linkURL}"
-
-                scrapedLinks.append(linkURL)
+                normalize = urljoin(resp.url, linkURL)
+                if not repetitive(normalize) and not too_deep(normalize):
+                    scrapedLinks.append(normalize)
 
     return scrapedLinks 
 
@@ -57,11 +58,11 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        if repetitive(parsed):
-            return False
         if not isScrapable(url):
             return False
         if not isWithinDomain(parsed):
+            return False
+        if repetitive(url):
             return False
         if too_deep(url):
             return False
@@ -150,7 +151,7 @@ def isScrapable(url):
 def repetitive(parsedURL):
     """ Checks for repeating segments Note! this is a work in progress. """
     sectionDict = {}
-    parsed = parsedURL.path
+    parsed = urlparse(parsedURL).path
     section = parsed.strip("/").split("/")
     current = None
     for i in section:
