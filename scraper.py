@@ -23,6 +23,8 @@ def extract_next_links(url, resp):
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
     scrapedLinks = list()
+    visitedURLS = {}
+    contentHashes = {}
 
     # if resp.status is not 200 return 
     if resp.status != 200 or resp.raw_response is None:
@@ -42,6 +44,14 @@ def extract_next_links(url, resp):
                     linkURL = f"https:{linkURL}"
                 elif linkURL.startswith("/") : # (1 slash)  add path to the base URL.
                     linkURL = f"{url}{linkURL}"
+
+                # check for URL repeat patterns
+                if visitedURLS.get(linkURL, 0) > 5:
+                    continue
+                visitedURLS[linkURL] = visitedURLS.get(linkURL, 0) + 1
+
+
+
                 scrapedLinks.append(linkURL)
 
     return scrapedLinks 
