@@ -133,17 +133,15 @@ def repetitive(url):
     section = parsed.strip("/").split("/")
     current = None
     for i in section:
-        if i == current:
-            if i in sectionDict:
-                sectionDict[i] += 1
-            else:
-                sectionDict[i] = 1
-            if sectionDict[i] > 3:
-                return True
+        if i in sectionDict:
+            sectionDict[i] += 1
         else:
-            sectionDict[i] = 0
+            section[i] = 1
 
-        current = i
+    # check section repeats
+    if any(count > 3 for count in sectionDict.values()):
+        return True
+
     return False
 
 def removePath(url):
