@@ -56,11 +56,13 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        if repetitive(url):
-            return False
         if not isScrapable(url):
             return False
         if not isWithinDomain(url):
+            return False
+        if repetitive(url):
+            return False
+        if too_deep(url):
             return False
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
@@ -144,6 +146,13 @@ def repetitive(url):
 
     return False
 
+def too_deep(url):
+    """ Checks if depth of URL go over a maximum value. """
+    depth = urlparse(url).path.strip("/").count("/")
+    maxAmount = 10
+    if depth > maxAmount:
+        return True
+    
 def removePath(url):
     """ This method keep the host name of the domain and reomves
       all the remaining path"""
