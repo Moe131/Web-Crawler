@@ -4,8 +4,12 @@ from urllib.robotparser import RobotFileParser
 from bs4 import BeautifulSoup
 from tokenizer import *
 
+# Dictionary to store common words
 commonWords = {}
+# Set of unique urls
 uniqueURLs = set()
+# Dictionary to store robots.txt for urls
+robots_cache = {}
 
 
 def scraper(url, resp):
@@ -37,16 +41,9 @@ def extract_next_links(url, resp):
         if linkElement and linkElement.get("href"):
             linkURL = linkElement.get("href")
             if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
-                if linkURL == "/" :
-                    continue
-                elif linkURL.startswith("//") : # (2 slashes)  to handled absolute paths
-                    linkURL = f"https:{linkURL}"
-                elif linkURL.startswith("/") : # (1 slash) to handle relative path
-                    linkURL = f"{url}{linkURL}"
-                normalize = urljoin(resp.url, linkURL)
-                if not repetitive(normalize) and not too_deep(normalize):
-                    scrapedLinks.append(normalize)
-
+                    parsed = urlparse(linkURL)
+                    next_url = parsed._replace(query= "").geturl()
+                    scrapedLinks.append(urljoin(url, next_url))
     return scrapedLinks 
 
 
@@ -58,11 +55,11 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
+        if repetitive(url):
+            return False
         if not isScrapable(url):
             return False
         if not isWithinDomain(parsed):
-            return False
-        if repetitive(url):
             return False
         if too_deep(url):
             return False
@@ -75,7 +72,6 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
-
     except TypeError:
         print ("TypeError for ", parsed)
         raise
@@ -90,6 +86,7 @@ def isWithinDomain(parsedURL):
         return False
     else:
         return True
+
 
 def find_word_frquency(url, resp) ->  dict :
     """ Reads the content of a URL and returns a dictionary
@@ -130,6 +127,7 @@ def count_if_unique(url):
     urldeletedFragment = parsed._replace(fragment = "").geturl() 
     uniqueURLs.add(urldeletedFragment)
 
+
 def top_words():
     """ Finds the 50 most common words in the entire set of pages """
     # sorted the dictionary and obtains the 50 most common words
@@ -141,18 +139,26 @@ def isScrapable(url):
         we are allowed to scrape it and False otherwise"""
     try:
         hostPath = removePath(url)
-        rbParser = RobotFileParser()
-        rbParser.set_url(hostPath+"/robots.txt")
-        rbParser.read()
+        robotsURL = hostPath + "/robots.txt"
+
+        if robotsURL in robots_cache:
+            rbParser = robots_cache[robotsURL]
+        else:
+            rbParser = RobotFileParser()
+            rbParser.set_url(robotsURL)
+            rbParser.read()
+            robots_cache[robotsURL] = rbParser
+
         return rbParser.can_fetch("*", url)
+
     except Exception as e:
         return False
     
-def repetitive(parsedURL):
+
+def repetitive(url):
     """ Checks for repeating segments Note! this is a work in progress. """
     sectionDict = {}
-    parsed = urlparse(parsedURL).path
-    section = parsed.strip("/").split("/")
+    section = url.split("/")
     current = None
     for i in section:
         if i in sectionDict:
@@ -165,13 +171,16 @@ def repetitive(parsedURL):
 
     return False
 
+
 def too_deep(url):
     """ Checks if depth of URL go over a maximum value. """
     depth = urlparse(url).path.strip("/").count("/")
     maxAmount = 10
     if depth > maxAmount:
         return True
+    return False
     
+
 def removePath(url):
     """ This method keep the host name of the domain and reomves
       all the remaining path"""
