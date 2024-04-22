@@ -34,12 +34,11 @@ def extract_next_links(url, resp):
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
     scrapedLinks = list()    
-    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+    soup = BeautifulSoup(resp.raw_response.content, "lxml")
         
     # finding all the <a> elements (links) in the HTML file (Note: loops and traps are not handled)
-    for linkElement in soup.find_all("a"): 
-        if linkElement and linkElement.get("href"):
-            linkURL = linkElement.get("href")
+    for linkElement in soup.find_all("a", href=True) : 
+            linkURL = linkElement.get("href", "")
             if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
                     parsed = urlparse(linkURL)
                     next_url = parsed._replace(query= "").geturl()
@@ -55,11 +54,11 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
+        if not isWithinDomain(parsed):
+            return False
         if repetitive(url):
             return False
         if not isScrapable(url):
-            return False
-        if not isWithinDomain(parsed):
             return False
         if too_deep(url):
             return False
@@ -72,9 +71,11 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+
     except TypeError:
         print ("TypeError for ", parsed)
         raise
+
 
 
 def isWithinDomain(parsedURL):
@@ -94,7 +95,7 @@ def find_word_frquency(url, resp) ->  dict :
      # if resp.status is not 200 return 
     if resp.status != 200:
         return dict() 
-    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+    soup = BeautifulSoup(resp.raw_response.content, "lxml")
     bodyContent = soup.find("body")
     listOfWords = list()
 
@@ -109,7 +110,6 @@ def find_word_frquency(url, resp) ->  dict :
     if len(bodyText) <= MAXBODYSIZE:
         listOfWords = tokenize(bodyText)
         return computeWordFrequencies(listOfWords)
-    
     return dict()
 
 
@@ -176,12 +176,10 @@ def repetitive(url):
     for i in section:
         if i in sectionDict:
             sectionDict[i] += 1
+            if sectionDict[i] >= 3:
+                return True
         else:
             sectionDict[i] = 1
-    # check section repeats
-    if any(count >= 3 for count in sectionDict.values()):
-        return True
-
     return False
 
 
