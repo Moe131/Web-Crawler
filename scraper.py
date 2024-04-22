@@ -95,9 +95,22 @@ def find_word_frquency(url, resp) ->  dict :
     if resp.status != 200:
         return dict() 
     soup = BeautifulSoup(resp.raw_response.content, "html.parser")
-    # finding all the elements in the HTML file and getting their texts
-    listOfWords = tokenize(soup.get_text())
-    return computeWordFrequencies(listOfWords)
+    bodyContent = soup.find("body")
+    listOfWords = list()
+
+    # check if url has body
+    if bodyContent :
+        bodyText = bodyContent.get_text()
+    else:
+        bodyText = ""
+    
+    # if the file size is too large do not index it and return empty dict
+    MAXBODYSIZE = 10000
+    if len(bodyText) <= MAXBODYSIZE:
+        listOfWords = tokenize(bodyText)
+        return computeWordFrequencies(listOfWords)
+    
+    return dict()
 
 
 def createSummaryFile():
