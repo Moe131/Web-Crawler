@@ -12,6 +12,8 @@ uniqueURLs = set()
 robots_cache = {}
 # Longest page in terms of words
 longest_page = ("",0)
+# Dictionary of unique subdomains of ics.uci.edu
+ICS_subdomains = {}
 
 
 
@@ -133,6 +135,10 @@ def createSummaryFile():
         summaryfile.write("\nTotal Unique URLs found : ")
         summaryfile.write(str(len(uniqueURLs)))
 
+        summaryfile.write(f"\n\nNumber of subdomains in the ics.uci.edu domain : {len(ICS_subdomains)}\n")
+        for key in sorted(ICS_subdomains.keys()):
+                summaryfile.write(f"\n{key} : {ICS_subdomains[key]}\n")
+
 
 def add_words(dictionary):
     """ adds the words and their counts of each URL to the global dictionary  """
@@ -148,6 +154,12 @@ def count_if_unique(url):
     parsed = urlparse(url)
     urldeletedFragment = parsed._replace(fragment = "").geturl() 
     uniqueURLs.add(urldeletedFragment)
+    if "ics.uci.edu" in url:
+        subdomain = parsed._replace(path="",fragment = "", query="").geturl()
+        if subdomain in ICS_subdomains:
+            ICS_subdomains[subdomain] += 1
+        else:
+            ICS_subdomains[subdomain] = 1
 
 
 def top_words():

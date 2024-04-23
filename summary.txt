@@ -1,58 +1,12 @@
-The longest page in terms of words is: https://www.cs.uci.edu/senior-spotlight-jose-cisneros-builds-impressive-resume-with-trio-of-internships at 1524 words
+The longest page in terms of words is:  at 0 words
 The top 50 common words in the crawled URLs are :
-s : 1331
-statistics : 1260
-data : 1189
-science : 1087
-2022 : 1045
-uci : 1038
-research : 933
-news : 716
-computer : 654
-faculty : 572
-professor : 536
-september : 523
-students : 520
-statistical : 478
-new : 467
-graduate : 460
-school : 458
-information : 423
-program : 404
-department : 369
-bren : 331
-says : 331
-donald : 328
-course : 305
-degrees : 304
-will : 304
-ics : 299
-current : 289
-work : 287
-sciences : 286
-undergraduate : 278
-master : 277
-can : 277
-health : 274
-opportunities : 270
-time : 263
-student : 262
-world : 261
-d : 257
-seminars : 243
-members : 243
-institute : 240
-directory : 235
-listings : 234
-ph : 230
-center : 229
-methods : 227
-also : 221
-study : 220
-contact : 218
 
-<<<<<<< HEAD
-Total Unique URLs found : 181
-=======
-Total Unique URLs found : 149
->>>>>>> 3857b56685147014a17a98664d37efceb7331a5d
+Total Unique URLs found : 3
+
+Number of subdomains in the ics.uci.edu domain : 3
+
+http://vision.ics.uci.edu : 1
+
+http://www.ics.uci.edu : 1
+
+https://www.ics.uci.edu : 1
