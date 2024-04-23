@@ -1,12 +1,60 @@
-The longest page in terms of words is:  at 0 words
+The longest page in terms of words is: http://www.ics.uci.edu/grad/admissions/index.php at 634 words
 The top 50 common words in the crawled URLs are :
+ics : 23
+graduate : 20
+policies : 18
+uci : 18
+computer : 17
+school : 16
+bren : 16
+research : 14
+programs : 12
+students : 11
+information : 10
+academic : 10
+m : 10
+irvine : 9
+events : 9
+contact : 9
+donald : 9
+apply : 8
+s : 8
+science : 8
+student : 8
+now : 8
+resources : 7
+vision : 6
+systems : 6
+ph : 6
+d : 6
+uc : 5
+home : 5
+sciences : 5
+visit : 5
+informatics : 5
+statistics : 5
+course : 5
+updates : 5
+faculty : 5
+staff : 5
+master : 5
+2022 : 5
+00 : 5
+p : 5
+register : 5
+edu : 5
+courses : 4
+interested : 4
+admissions : 4
+hall : 4
+year : 4
+plan : 4
+computing : 4
 
 Total Unique URLs found : 3
 
-Number of subdomains in the ics.uci.edu domain : 3
+Number of subdomains in the ics.uci.edu domain : 2
 
-http://vision.ics.uci.edu : 1
+https://vision.ics.uci.edu : 1
 
-http://www.ics.uci.edu : 1
-
-https://www.ics.uci.edu : 1
+https://www.ics.uci.edu : 2

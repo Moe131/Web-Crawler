@@ -102,7 +102,7 @@ def find_word_frquency(url, resp) ->  dict :
     if resp.status != 200:
         return dict() 
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
-    bodyContent = soup.find("main")
+    bodyContent = soup.find("body")
     listOfWords = list()
 
     # check if url has body
@@ -155,7 +155,7 @@ def count_if_unique(url):
     urldeletedFragment = parsed._replace(fragment = "").geturl() 
     uniqueURLs.add(urldeletedFragment)
     if "ics.uci.edu" in url:
-        subdomain = parsed._replace(path="",fragment = "", query="").geturl()
+        subdomain = parsed._replace(scheme= "https", path="",fragment = "", query="").geturl()
         if subdomain in ICS_subdomains:
             ICS_subdomains[subdomain] += 1
         else:
