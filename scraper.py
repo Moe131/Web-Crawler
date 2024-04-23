@@ -102,9 +102,15 @@ def find_word_frquency(url, resp) ->  dict :
      # if resp.status is not 200 return 
     if resp.status != 200:
         return dict() 
+    
+    # check if the page has low text value
+    if lowTextValue(resp.raw_response.content):
+        return dict()
+    
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
     bodyContent = soup.find("body")
     listOfWords = list()
+
 
     # check if url has body
     if bodyContent :
@@ -212,7 +218,24 @@ def too_deep(url):
     if depth > maxAmount:
         return True
     return False
-    
+
+def lowTextValue(pageInfo):
+    """ Checks for pages that have low information value. """
+    soup = BeautifulSoup(pageInfo, "lxml")
+    bodyContent = soup.find("body")
+    listOfWords = list()
+    # check if url has body
+    if bodyContent :
+        text = bodyContent.get_text()
+    else:
+        text = ""
+    errors = ["Error", "Whoops", "having trouble locating"]
+    for word in errors:
+        if word.lower() in text.lower():
+            return True
+    if len(text.split()) < 700:
+        return True
+    return False
 
 def removePath(url):
     """ This method keep the host name of the domain and reomves
