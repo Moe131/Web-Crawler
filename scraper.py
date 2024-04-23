@@ -96,7 +96,7 @@ def find_word_frquency(url, resp) ->  dict :
     if resp.status != 200:
         return dict() 
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
-    bodyContent = soup.find("body")
+    bodyContent = soup.find("main")
     listOfWords = list()
 
     # check if url has body
