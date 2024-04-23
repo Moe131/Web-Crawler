@@ -10,6 +10,9 @@ commonWords = {}
 uniqueURLs = set()
 # Dictionary to store robots.txt for urls
 robots_cache = {}
+# Longest page in terms of words
+longest_page = ("",0)
+
 
 
 def scraper(url, resp):
@@ -19,6 +22,7 @@ def scraper(url, resp):
     count_if_unique(url)
     links = extract_next_links(url, resp)
     add_words(find_word_frquency(url, resp))
+
     createSummaryFile()  # later we should we move this to the end of launch.py
     return [link for link in links if is_valid(link)]
 
@@ -109,14 +113,19 @@ def find_word_frquency(url, resp) ->  dict :
     MAXBODYSIZE = 10000
     if len(bodyText) <= MAXBODYSIZE:
         listOfWords = tokenize(bodyText)
+        #Check if longest page
+        global longest_page
+        if (len(listOfWords) > longest_page[1]):
+            longest_page = (url, len(listOfWords))
         return computeWordFrequencies(listOfWords)
     return dict()
-
 
 def createSummaryFile():
     """ Creates summary.txt with the numer of unique URLs and the
         top 50 words in the crawled pages """
     with open("summary.txt" , 'w') as summaryfile:
+        #lists the page with the most words
+        summaryfile.write(f"The longest page in terms of words is: {longest_page[0]} at {longest_page[1]} words\n")
         # sorted the dictionary and obtains the 50 most common words
         summaryfile.write("The top 50 common words in the crawled URLs are :\n")
         for word, count in top_words():
