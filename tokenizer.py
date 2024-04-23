@@ -70,6 +70,3 @@ def printFrequencies(frequencies: dict) -> None:
 	sortedTuple = sorted(frequencies.items(), key= lambda x:x[1], reverse = True)
 	for key, value in sortedTuple:
 		print(str(key) + " = " + str(value))
-
-def test_file():
-	return
