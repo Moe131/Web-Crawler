@@ -1,4 +1,5 @@
 import re
+import pickle
 from urllib.parse import urlparse, urljoin
 from urllib.robotparser import RobotFileParser
 from bs4 import BeautifulSoup
@@ -24,8 +25,8 @@ def scraper(url, resp):
     count_if_unique(url)
     links = extract_next_links(url, resp)
     add_words(find_word_frquency(url, resp))
-
     createSummaryFile()  # later we should we move this to the end of launch.py
+    save_data()
     return [link for link in links if is_valid(link)]
 
 
@@ -127,7 +128,7 @@ def createSummaryFile():
         top 50 words in the crawled pages """
     with open("summary.txt" , 'w') as summaryfile:
         #lists the page with the most words
-        summaryfile.write(f"The longest page in terms of words is: {longest_page[0]} at {longest_page[1]} words\n")
+        summaryfile.write(f"The longest page in terms of words is at: {longest_page[0]} with {longest_page[1]} words\n\n")
         # sorted the dictionary and obtains the 50 most common words
         summaryfile.write("The top 50 common words in the crawled URLs are :\n")
         for word, count in top_words():
@@ -218,3 +219,25 @@ def removePath(url):
       all the remaining path"""
     parsedURL = urlparse(url)
     return f"{parsedURL.scheme}://{parsedURL.netloc}"
+
+def save_data():
+    """ Stores all the data from scraped URLs to save the progress in case program is stopped """
+    with open("scrapedData.pickle", "wb") as f:
+        pickle.dump((commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains), f)
+
+
+def load_data(restart):
+    """ Loads all the data from previous scraped URLs"""
+    global commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains
+    if restart: # If crawler is restarted all data will be reset
+        return
+    try:
+        with open("scrapedData.pickle", "rb") as f:
+            commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains = pickle.load(f)
+    except FileNotFoundError:
+        # If the file doesn't exist
+        commonWords = {}
+        uniqueURLs = set()
+        robots_cache = {}
+        longest_page = ("", 0)
+        ICS_subdomains = {}

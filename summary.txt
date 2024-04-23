@@ -1,60 +1,65 @@
-The longest page in terms of words is: http://www.ics.uci.edu/grad/admissions/index.php at 634 words
+The longest page in terms of words is at: https://www.stat.uci.edu/conference-experience-confirms-competitive-edge-of-ics-capstone-program with 1492 words
+
 The top 50 common words in the crawled URLs are :
-ics : 23
-graduate : 20
-policies : 18
-uci : 18
-computer : 17
-school : 16
-bren : 16
-research : 14
-programs : 12
-students : 11
-information : 10
-academic : 10
-m : 10
-irvine : 9
-events : 9
-contact : 9
-donald : 9
-apply : 8
-s : 8
-science : 8
-student : 8
-now : 8
-resources : 7
-vision : 6
-systems : 6
-ph : 6
-d : 6
-uc : 5
-home : 5
-sciences : 5
-visit : 5
-informatics : 5
-statistics : 5
-course : 5
-updates : 5
-faculty : 5
-staff : 5
-master : 5
-2022 : 5
-00 : 5
-p : 5
-register : 5
-edu : 5
-courses : 4
-interested : 4
-admissions : 4
-hall : 4
-year : 4
-plan : 4
-computing : 4
+s : 254
+1 : 178
+research : 170
+program : 140
+information : 139
+science : 138
+computer : 136
+uci : 132
+students : 132
+statistics : 129
+ics : 122
+m : 121
+software : 120
+2022 : 103
+data : 98
+faculty : 95
+school : 94
+student : 90
+bren : 88
+career : 86
+course : 84
+j : 81
+engineering : 80
+contact : 77
+graduate : 77
+department : 74
+d : 74
+n : 74
+policies : 73
+undergraduate : 70
+x : 70
+development : 68
+w : 68
+master : 67
+news : 66
+donald : 64
+design : 64
+admissions : 60
+academic : 58
+0 : 58
+staff : 56
+informatics : 56
+new : 52
+projects : 51
+b : 50
+people : 48
+ind : 48
+statistical : 47
+2 : 47
+time : 46
 
-Total Unique URLs found : 3
+Total Unique URLs found : 49
 
-Number of subdomains in the ics.uci.edu domain : 2
+Number of subdomains in the ics.uci.edu domain : 4
 
-https://vision.ics.uci.edu : 1
+https://mse.ics.uci.edu : 6
 
-https://www.ics.uci.edu : 2
+https://mswe.ics.uci.edu : 13
+
+https://www.ics.uci.edu : 23
+
+https://www.informatics.uci.edu : 3
