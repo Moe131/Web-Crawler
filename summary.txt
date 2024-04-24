@@ -1,65 +1,193 @@
-The longest page in terms of words is at: https://www.cs.uci.edu/senior-spotlight-jose-cisneros-builds-impressive-resume-with-trio-of-internships with 1524 words
+The longest page in terms of words is at: http://www.ics.uci.edu/~kay/courses/i42/hw/hw7.html with 1786 words
 
 The top 50 common words in the crawled URLs are :
-s : 435
-science : 379
-uci : 325
-data : 309
-2022 : 294
-computer : 292
-statistics : 282
-students : 274
-research : 269
-says : 189
-news : 172
-faculty : 168
-september : 162
-ics : 159
-school : 143
-new : 139
-program : 132
-professor : 130
-information : 125
-also : 125
-work : 121
-graduate : 119
-learning : 119
-major : 116
-can : 116
-project : 112
-undergraduate : 108
-capstone : 108
-student : 102
-statistical : 102
-department : 101
-course : 100
-world : 99
-time : 98
-projects : 97
-one : 95
-year : 93
-center : 85
-degrees : 84
-bren : 82
-donald : 80
-will : 80
-team : 79
-sciences : 78
-opportunities : 77
-real : 77
-experience : 76
-people : 75
-first : 74
-current : 72
+s : 15745
+research : 10976
+student : 7435
+2022 : 6302
+2018 : 6223
+2021 : 6222
+2017 : 6213
+2020 : 6202
+2019 : 6095
+b : 6006
+2016 : 5982
+software : 5941
+2015 : 5843
+computer : 5742
+graduate : 5667
+undergraduate : 5626
+engineering : 5381
+uci : 5271
+september : 5201
+d : 4869
+informatics : 4863
+may : 4812
+june : 4548
+science : 4539
+department : 4526
+students : 4476
+july : 4379
+ph : 4324
+information : 4287
+october : 4030
+march : 3991
+january : 3977
+april : 3959
+february : 3959
+december : 3927
+november : 3912
+august : 3910
+design : 3384
+course : 3368
+profiles : 3360
+will : 3256
+m : 3074
+support : 3032
+news : 3009
+2014 : 2976
+can : 2885
+projects : 2847
+courses : 2834
+faculty : 2799
+degrees : 2733
 
-Total Unique URLs found : 255
+Total Unique URLs found : 6576
 
-Number of subdomains in the ics.uci.edu domain : 4
+Number of subdomains in the ics.uci.edu domain : 68
+
+https://accessibility.ics.uci.edu : 1
+
+https://acoi.ics.uci.edu : 74
+
+https://archive.ics.uci.edu : 4
+
+https://asterix.ics.uci.edu : 5
+
+https://cbcl.ics.uci.edu : 22
+
+https://cert.ics.uci.edu : 3
+
+https://computableplant.ics.uci.edu : 5
+
+https://create.ics.uci.edu : 6
+
+https://dejavu.ics.uci.edu : 1
+
+https://economics.uci.edu : 4
+
+https://elms.ics.uci.edu : 4
+
+https://flamingo.ics.uci.edu : 8
+
+https://fr.ics.uci.edu : 3
+
+https://frost.ics.uci.edu : 1
 
 https://futurehealth.ics.uci.edu : 27
 
+https://graphics.ics.uci.edu : 3
+
+https://graphmod.ics.uci.edu : 1
+
 https://hack.ics.uci.edu : 1
 
-https://studentcouncil.ics.uci.edu : 19
+https://hai.ics.uci.edu : 2
 
-https://www.ics.uci.edu : 5
+https://hobbes.ics.uci.edu : 1
+
+https://hpi.ics.uci.edu : 3
+
+https://hub.ics.uci.edu : 3
+
+https://i-sensorium.ics.uci.edu : 1
+
+https://ics.uci.edu : 23
+
+https://industryshowcase.ics.uci.edu : 20
+
+https://informatics.ics.uci.edu : 28
+
+https://ipubmed.ics.uci.edu : 1
+
+https://jdsylab.physics.uci.edu : 22
+
+https://keys.ics.uci.edu : 3
+
+https://linguistics.uci.edu : 37
+
+https://malek.ics.uci.edu : 1
+
+https://mcs.ics.uci.edu : 82
+
+https://mhcid.ics.uci.edu : 15
+
+https://mondego.ics.uci.edu : 3
+
+https://motifmap-rna.ics.uci.edu : 2
+
+https://motifmap.ics.uci.edu : 2
+
+https://mse.ics.uci.edu : 6
+
+https://mswe.ics.uci.edu : 17
+
+https://onboarding.ics.uci.edu : 3
+
+https://pgadmin.ics.uci.edu : 2
+
+https://physics.uci.edu : 745
+
+https://plrg.ics.uci.edu : 84
+
+https://psearch.ics.uci.edu : 1
+
+https://radicle.ics.uci.edu : 1
+
+https://riscit.ics.uci.edu : 1
+
+https://sdcl.ics.uci.edu : 205
+
+https://seal.ics.uci.edu : 2
+
+https://sherlock.ics.uci.edu : 7
+
+https://sli.ics.uci.edu : 677
+
+https://sourcerer.ics.uci.edu : 1
+
+https://speedtest.ics.uci.edu : 1
+
+https://stairs.ics.uci.edu : 4
+
+https://student-council.ics.uci.edu : 19
+
+https://studentcouncil.ics.uci.edu : 21
+
+https://support.ics.uci.edu : 7
+
+https://swiki.ics.uci.edu : 58
+
+https://tad.ics.uci.edu : 3
+
+https://ugradforms.ics.uci.edu : 1
+
+https://vision.ics.uci.edu : 195
+
+https://wiki.ics.uci.edu : 51
+
+https://www-db.ics.uci.edu : 8
+
+https://www.cert.ics.uci.edu : 2
+
+https://www.economics.uci.edu : 75
+
+https://www.graphics.ics.uci.edu : 1
+
+https://www.ics.uci.edu : 1551
+
+https://www.informatics.ics.uci.edu : 1
+
+https://www.informatics.uci.edu : 1152
+
+https://www.physics.uci.edu : 939
