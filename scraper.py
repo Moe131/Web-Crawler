@@ -107,7 +107,6 @@ def find_word_frquency(url, resp) ->  dict :
     bodyContent = soup.find("body")
     listOfWords = list()
 
-
     # check if url has body
     if bodyContent :
         bodyText = bodyContent.get_text()
@@ -120,14 +119,16 @@ def find_word_frquency(url, resp) ->  dict :
 
     # if the file size is too large do not index it and return empty dict
     MAXBODYSIZE = 10000
-    if len(bodyText) <= MAXBODYSIZE:
-        listOfWords = tokenize(bodyText)
-        #Check if longest page
-        global longest_page
-        if (len(listOfWords) > longest_page[1]):
-            longest_page = (url, len(listOfWords))
-        return computeWordFrequencies(listOfWords)
-    return dict()
+    if len(bodyText) > MAXBODYSIZE:
+            return dict()
+    
+    tokenFreq = tokenize(bodyText)
+    #Check if longest page
+    global longest_page
+    pageLength = sum(tokenFreq.values())
+    if pageLength > longest_page[1]:
+        longest_page = (url, pageLength)
+    return tokenFreq
 
 def createSummaryFile():
     """ Creates summary.txt with the numer of unique URLs and the
