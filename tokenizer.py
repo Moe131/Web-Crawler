@@ -5,7 +5,7 @@ import sys
 # iterates through a constant sized string
 def isAlphaNum(ch:str) -> bool:
     ''' Checks if a character is number or american letter  '''
-    english_letters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    english_letters= set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
     if ch in english_letters:
         return True
     else:
@@ -25,7 +25,8 @@ def tokenize(text: str) -> list:
 			token += ch
 		else:
 			if token != "":
-				tokensList.append(token.lower())
+				if len(token) > 1:
+					tokensList.append(token.lower())
 				token = "" 
 	return tokensList
 
