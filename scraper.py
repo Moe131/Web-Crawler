@@ -103,6 +103,11 @@ def find_word_frquency(url, resp) ->  dict :
     if resp.status != 200:
         return dict() 
     
+    # if the file size is too large do not index it and return empty dict ( more than 5MB)
+    MAXBODYSIZE = 5000000
+    if len(resp.raw_response.content) > MAXBODYSIZE:
+            return dict()
+    
     soup = BeautifulSoup(resp.raw_response.content, "lxml")
     bodyContent = soup.find("body")
     listOfWords = list()
@@ -117,10 +122,6 @@ def find_word_frquency(url, resp) ->  dict :
     if lowTextValue(bodyText):
         return dict()
 
-    # if the file size is too large do not index it and return empty dict
-    MAXBODYSIZE = 10000
-    if len(bodyText) > MAXBODYSIZE:
-            return dict()
     
     tokenFreq = tokenize(bodyText)
     #Check if longest page
@@ -223,10 +224,16 @@ def too_deep(url):
 def lowTextValue(text):
     """ Checks for pages that have low information value. """
     errors = ["Error", "Whoops", "having trouble locating"]
+    isError = False
+    wordCount = len(text.split())
     for word in errors:
         if word.lower() in text.lower():
-            return True
-    if len(text.split()) < 700:
+            IsError = True
+    # Page has error message content
+    if wordCount < 500 and isError :
+        return True
+    # Page has no content
+    if wordCount < 50 :
         return True
     return False
 
