@@ -22,9 +22,9 @@ def scraper(url, resp):
     # if retrieving the page was NOT successful return empty list of links
     if resp.status != 200 or resp.raw_response is None:
         return list()
-    count_if_unique(url)
-    links = extract_next_links(url, resp)
-    add_words(find_word_frquency(url, resp))
+    count_if_unique(resp.url)
+    links = extract_next_links(resp.url, resp)
+    add_words(find_word_frquency(resp.url, resp))
     createSummaryFile()  # later we should we move this to the end of launch.py
     save_data()
     return [link for link in links if is_valid(link)]
@@ -160,6 +160,8 @@ def add_words(dictionary):
 
 
 def count_if_unique(url):
+    if "www." in url:
+        url = url.replace("www.", "")
     parsed = urlparse(url)
     urldeletedFragment = parsed._replace(fragment = "").geturl() 
     uniqueURLs.add(urldeletedFragment)
