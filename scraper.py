@@ -49,7 +49,7 @@ def extract_next_links(url, resp):
             if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
                     parsed = urlparse(linkURL)
                     next_url = parsed._replace(query= "").geturl()
-                    scrapedLinks.append(urljoin(url, next_url))
+                    scrapedLinks.append(urljoin(resp.url, next_url))
     return scrapedLinks 
 
 
