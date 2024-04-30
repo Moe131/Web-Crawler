@@ -1,62 +1,60 @@
-The longest page in terms of words is at: https://www.stat.uci.edu/covid19/index.html with 24532 words
+The longest page in terms of words is at: https://sli.ics.uci.edu/AIStats/Postings with 18392 words
 
 The top 50 common words in the crawled URLs are :
-research : 48869
-computer : 32583
-uci : 31314
-2022 : 28766
-students : 28483
-will : 26643
-the : 26318
-information : 25640
-student : 23972
-ramesh : 22720
-software : 22213
-events : 20001
-news : 19743
-science : 19582
-current : 19021
-may : 18494
-graduate : 18404
-courses : 18361
-2021 : 18031
-data : 17924
-search : 17502
-2018 : 17477
-design : 17205
-past : 17000
-people : 16976
-2020 : 16800
-can : 16458
-we : 16325
-engineering : 15872
-2019 : 15755
-ics : 15476
-undergraduate : 15332
-2017 : 15320
-september : 14728
-department : 14672
-october : 14617
-books : 14440
-projects : 14351
-computing : 14038
-one : 13687
-informatics : 13454
-course : 13244
-2016 : 13107
-2015 : 12995
-new : 12774
-time : 12766
-faculty : 12396
-physics : 12063
-pm : 12039
-us : 11811
+ihler : 24731
+uci : 23563
+the : 23284
+we : 23015
+can : 19415
+data : 18978
+research : 18618
+computer : 16548
+year : 16145
+information : 16128
+in : 14976
+models : 14569
+pdf : 14329
+pages : 14149
+title : 13603
+time : 13573
+events : 13307
+learning : 13172
+author : 13106
+search : 13045
+model : 12199
+science : 12094
+will : 12085
+inference : 12075
+physics : 12038
+ics : 11016
+based : 10955
+field : 10871
+new : 10748
+page : 10697
+bibtex : 10595
+map : 10581
+2022 : 10103
+alexander : 9780
+use : 9718
+students : 9596
+home : 9373
+school : 9169
+student : 9133
+university : 9113
+algorithm : 9082
+using : 8993
+booktitle : 8975
+this : 8959
+systems : 8888
+graphical : 8822
+algorithms : 8732
+belief : 8730
+div : 8700
+propagation : 8638
 
-Total Unique URLs found : 11545
+Total Unique URLs found : 6899
 
-Number of subdomains in the ics.uci.edu domain : 100
-
-https://Transformativeplay.ics.uci.edu : 1
+Number of subdomains in the ics.uci.edu domain : 69
 
 https://accessibility.ics.uci.edu : 1
 
@@ -64,9 +62,9 @@ https://acoi.ics.uci.edu : 74
 
 https://aiclub.ics.uci.edu : 1
 
-https://archive.ics.uci.edu : 2
+https://archive.ics.uci.edu : 5
 
-https://asterix.ics.uci.edu : 7
+https://asterix.ics.uci.edu : 6
 
 https://cbcl.ics.uci.edu : 22
 
@@ -76,8 +74,6 @@ https://chenli.ics.uci.edu : 9
 
 https://cml.ics.uci.edu : 184
 
-https://code.ics.uci.edu : 13
-
 https://computableplant.ics.uci.edu : 32
 
 https://cradl.ics.uci.edu : 10
@@ -86,31 +82,21 @@ https://create.ics.uci.edu : 7
 
 https://cwicsocal18.ics.uci.edu : 12
 
-https://dejavu.ics.uci.edu : 1
-
 https://dgillen.ics.uci.edu : 25
 
-https://duttgroup.ics.uci.edu : 99
+https://duttgroup.ics.uci.edu : 98
 
 https://dynamo.ics.uci.edu : 1
 
 https://economics.uci.edu : 4
 
-https://edgelab.ics.uci.edu : 7
-
 https://elms.ics.uci.edu : 4
 
 https://emj.ics.uci.edu : 37
 
-https://esl.ics.uci.edu : 2
-
-https://evoke.ics.uci.edu : 5
-
 https://flamingo.ics.uci.edu : 11
 
 https://fr.ics.uci.edu : 3
-
-https://frost.ics.uci.edu : 1
 
 https://futurehealth.ics.uci.edu : 122
 
@@ -130,53 +116,25 @@ https://hub.ics.uci.edu : 3
 
 https://i-sensorium.ics.uci.edu : 1
 
-https://iasl.ics.uci.edu : 20
-
-https://ics.uci.edu : 89
+https://ics.uci.edu : 87
 
 https://industryshowcase.ics.uci.edu : 20
 
-https://informatics.ics.uci.edu : 28
-
-https://ipf.ics.uci.edu : 2
-
 https://ipubmed.ics.uci.edu : 1
 
-https://isg.ics.uci.edu : 147
-
 https://jdsylab.physics.uci.edu : 22
-
-https://jgarcia.ics.uci.edu : 1
 
 https://keys.ics.uci.edu : 3
 
 https://linguistics.uci.edu : 37
 
-https://luci.ics.uci.edu : 4
-
 https://malek.ics.uci.edu : 1
 
-https://mcs.ics.uci.edu : 83
-
 https://mdogucu.ics.uci.edu : 1
-
-https://mds.ics.uci.edu : 19
-
-https://mhcid.ics.uci.edu : 16
-
-https://mondego.ics.uci.edu : 3
 
 https://motifmap-rna.ics.uci.edu : 2
 
 https://motifmap.ics.uci.edu : 2
-
-https://mse.ics.uci.edu : 6
-
-https://mswe.ics.uci.edu : 18
-
-https://nalini.ics.uci.edu : 7
-
-https://ngs.ics.uci.edu : 4309
 
 https://onboarding.ics.uci.edu : 3
 
@@ -190,25 +148,17 @@ https://psearch.ics.uci.edu : 1
 
 https://radicle.ics.uci.edu : 1
 
-https://redmiles.ics.uci.edu : 4
+https://sdcl.ics.uci.edu : 204
 
-https://riscit.ics.uci.edu : 1
-
-https://sdcl.ics.uci.edu : 205
-
-https://seal.ics.uci.edu : 2
+https://seal.ics.uci.edu : 1
 
 https://sherlock.ics.uci.edu : 7
 
-https://sourcerer.ics.uci.edu : 1
+https://sli.ics.uci.edu : 677
 
 https://speedtest.ics.uci.edu : 1
 
 https://stairs.ics.uci.edu : 4
-
-https://statconsulting.ics.uci.edu : 5
-
-https://student-council.ics.uci.edu : 19
 
 https://studentcouncil.ics.uci.edu : 21
 
@@ -220,23 +170,17 @@ https://tad.ics.uci.edu : 3
 
 https://tastier.ics.uci.edu : 1
 
-https://transformativeplay.ics.uci.edu : 53
-
 https://tutors.ics.uci.edu : 44
 
 https://ugradforms.ics.uci.edu : 1
 
-https://unite.ics.uci.edu : 10
-
 https://vision.ics.uci.edu : 200
-
-https://wearablegames.ics.uci.edu : 2
 
 https://wics.ics.uci.edu : 781
 
-https://wiki.ics.uci.edu : 49
+https://wiki.ics.uci.edu : 51
 
-https://www-db.ics.uci.edu : 16
+https://www-db.ics.uci.edu : 8
 
 https://www.cert.ics.uci.edu : 2
 
@@ -244,14 +188,8 @@ https://www.economics.uci.edu : 75
 
 https://www.graphics.ics.uci.edu : 1
 
-https://www.ics.uci.edu : 1703
-
-https://www.informatics.ics.uci.edu : 1
-
-https://www.informatics.uci.edu : 1162
+https://www.ics.uci.edu : 1797
 
 https://www.physics.uci.edu : 939
-
-https://www.statistics.uci.edu : 1
 
 https://xtune.ics.uci.edu : 6
