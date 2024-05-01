@@ -4,14 +4,14 @@ The top 50 common words in the crawled URLs are :
 ihler : 24731
 uci : 23563
 the : 23284
-we : 23015
-can : 19415
+we : 23021
+can : 19416
 data : 18978
-research : 18618
-computer : 16548
+research : 18633
+computer : 16552
 year : 16145
-information : 16128
-in : 14976
+information : 16134
+in : 14977
 models : 14569
 pdf : 14329
 pages : 14149
@@ -19,27 +19,27 @@ title : 13603
 time : 13573
 events : 13307
 learning : 13172
-author : 13106
-search : 13045
+author : 13108
+search : 13046
 model : 12199
-science : 12094
+science : 12096
 will : 12085
 inference : 12075
 physics : 12038
 ics : 11016
 based : 10955
-field : 10871
-new : 10748
+field : 10872
+new : 10749
 page : 10697
 bibtex : 10595
-map : 10581
-2022 : 10103
+map : 10583
+2022 : 10104
 alexander : 9780
-use : 9718
-students : 9596
+use : 9719
+students : 9600
 home : 9373
 school : 9169
-student : 9133
+student : 9143
 university : 9113
 algorithm : 9082
 using : 8993
@@ -52,9 +52,9 @@ belief : 8730
 div : 8700
 propagation : 8638
 
-Total Unique URLs found : 6899
+Total Unique URLs found : 6706
 
-Number of subdomains in the ics.uci.edu domain : 69
+Number of subdomains in the ics.uci.edu domain : 65
 
 https://accessibility.ics.uci.edu : 1
 
@@ -68,7 +68,7 @@ https://asterix.ics.uci.edu : 6
 
 https://cbcl.ics.uci.edu : 22
 
-https://cert.ics.uci.edu : 3
+https://cert.ics.uci.edu : 5
 
 https://chenli.ics.uci.edu : 9
 
@@ -88,7 +88,7 @@ https://duttgroup.ics.uci.edu : 98
 
 https://dynamo.ics.uci.edu : 1
 
-https://economics.uci.edu : 4
+https://economics.uci.edu : 79
 
 https://elms.ics.uci.edu : 4
 
@@ -100,7 +100,7 @@ https://fr.ics.uci.edu : 3
 
 https://futurehealth.ics.uci.edu : 122
 
-https://graphics.ics.uci.edu : 3
+https://graphics.ics.uci.edu : 4
 
 https://graphmod.ics.uci.edu : 1
 
@@ -116,9 +116,11 @@ https://hub.ics.uci.edu : 3
 
 https://i-sensorium.ics.uci.edu : 1
 
-https://ics.uci.edu : 87
+https://ics.uci.edu : 1884
 
 https://industryshowcase.ics.uci.edu : 20
+
+https://informatics.uci.edu : 1
 
 https://ipubmed.ics.uci.edu : 1
 
@@ -140,7 +142,7 @@ https://onboarding.ics.uci.edu : 3
 
 https://pgadmin.ics.uci.edu : 2
 
-https://physics.uci.edu : 745
+https://physics.uci.edu : 1684
 
 https://plrg.ics.uci.edu : 84
 
@@ -181,15 +183,5 @@ https://wics.ics.uci.edu : 781
 https://wiki.ics.uci.edu : 51
 
 https://www-db.ics.uci.edu : 8
-
-https://www.cert.ics.uci.edu : 2
-
-https://www.economics.uci.edu : 75
-
-https://www.graphics.ics.uci.edu : 1
-
-https://www.ics.uci.edu : 1797
-
-https://www.physics.uci.edu : 939
 
 https://xtune.ics.uci.edu : 6
