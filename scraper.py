@@ -4,6 +4,7 @@ from urllib.parse import urlparse, urljoin
 from urllib.robotparser import RobotFileParser
 from bs4 import BeautifulSoup
 from tokenizer import *
+from simhash import *
 
 # Dictionary to store common words
 commonWords = {}
@@ -15,16 +16,22 @@ robots_cache = {}
 longest_page = ("",0)
 # Dictionary of unique subdomains of ics.uci.edu
 ICS_subdomains = {}
-
+# sim hashes of content to detect exact/near duplicate
+sim_hashes = set()
+# Dictionary of number of times a URL without query has been crawled to  avoid traps
+URLCrawlsCount = dict()
 
 
 def scraper(url, resp):
     # if retrieving the page was NOT successful return empty list of links
     if resp.status != 200 or resp.raw_response is None:
         return list()
-    count_if_unique(resp.url)
-    links = extract_next_links(resp.url, resp)
-    add_words(find_word_frquency(resp.url, resp))
+    # if content type is not HTML ignore it
+    content_type = resp.raw_response.headers.get('Content-Type')
+    if content_type and not 'text/html' in content_type: 
+        return list()
+    count(url)
+    links = extract_next_links(url, resp)
     createSummaryFile()  # later we should we move this to the end of launch.py
     save_data()
     return [link for link in links if is_valid(link)]
@@ -40,16 +47,29 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    scrapedLinks = list()    
-    soup = BeautifulSoup(resp.raw_response.content, "lxml")
-        
+
+    # if the file size is too large do not index it and return empty dict ( more than 5MB)
+    MAXBODYSIZE = 5000000
+    if len(resp.raw_response.content) > MAXBODYSIZE:
+            return list()
+
+    # parse the HTML using BeautifulSoup
+    soup = BeautifulSoup(resp.raw_response.content, "html.parser")
+    
+    # read the parsed content and check for duplication
+    content = read_content(url, soup)
+    if len(content) == 0: #If content is not worth scraping return 
+        return list()
+    add_words(content)
+
     # finding all the <a> elements (links) in the HTML file (Note: loops and traps are not handled)
+    scrapedLinks = list()    
     for linkElement in soup.find_all("a", href=True) : 
             linkURL = linkElement.get("href", "")
             if linkURL.startswith("https://") or linkURL.startswith("http://") or linkURL.startswith("/"): # do not add if its not a link
                     parsed = urlparse(linkURL)
-                    next_url = parsed._replace(query= "").geturl()
-                    scrapedLinks.append(urljoin(resp.url, next_url))
+                    next_url = parsed._replace(fragment= "").geturl()
+                    scrapedLinks.append(urljoin(url, next_url))
     return scrapedLinks 
 
 
@@ -65,6 +85,8 @@ def is_valid(url):
             return False
         if repetitive(url):
             return False
+        if is_url_query_trap(parsed):
+            return False
         if not isScrapable(url):
             return False
         if too_deep(url):
@@ -77,41 +99,53 @@ def is_valid(url):
             + r"|data|dat|exe|bz2|tar|msi|bin|7z|psd|dmg|iso"
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
-            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt)$", parsed.path.lower())
+            + r"|rm|smil|wmv|swf|wma|zip|rar|gz|txt)$", parsed.geturl().lower())
 
     except TypeError:
         print ("TypeError for ", parsed)
         raise
 
+def is_url_query_trap(parsed):
+    """ Checks if URL without query part has been already crawled more than the TRESHOLD, if so its a trap"""
+    TRESHOLD = 5
+    url = parsed._replace(fragment = "", query="").geturl()
+    if url in URLCrawlsCount and URLCrawlsCount[url] > 5:
+        return True
+    else:
+        return False
+
+
+def is_duplicate(tokenFreq):
+    """ Checks if a text represented as dictionary of words with their frequencies
+        is exact or near duplicate of already scraped websites. """
+    # store the hash and check if its exat duplicate
+    simhash = simHash(tokenFreq)
+    if simhash in sim_hashes: # exact dupliacte
+        return True
+    
+    for sh in sim_hashes:
+        if are_near_duplicate(sh, simhash):
+            return True
+    # store the hash if its not already stored
+    sim_hashes.add(simhash)
+    return False
 
 
 def isWithinDomain(parsedURL):
     """ Checks if the URL is within *.ics.uci.edu/* ,  *.cs.uci.edu/* ,and
       *.informatics.uci.edu/* , *.stat.uci.edu/* domains """
-    hostPath = parsedURL.netloc
-    if not ( ("ics.uci.edu" in hostPath) or ("cs.uci.edu" in hostPath) or 
-            ("informatics.uci.edu" in hostPath) or ("stat.uci.edu" in hostPath) ):
-        return False
-    else:
-        return True
+    domain = parsedURL.hostname
+    return ( (".ics.uci.edu" in domain) or (".cs.uci.edu" in domain) or 
+            (".informatics.uci.edu" in domain) or (".stat.uci.edu" in domain) or 
+            ("ics.uci.edu" == domain) or ("cs.uci.edu" == domain) or 
+            ("informatics.uci.edu" == domain) or ("stat.uci.edu" == domain) )
 
 
-def find_word_frquency(url, resp) ->  dict :
+def read_content(url, soup) ->  dict :
     """ Reads the content of a URL and returns a dictionary
-        with words and their frequencies in that page """
-     # if resp.status is not 200 return 
-    if resp.status != 200:
-        return dict() 
-    
-    # if the file size is too large do not index it and return empty dict ( more than 5MB)
-    MAXBODYSIZE = 5000000
-    if len(resp.raw_response.content) > MAXBODYSIZE:
-            return dict()
-    
-    soup = BeautifulSoup(resp.raw_response.content, "lxml")
+        with words and their frequencies in that page. If content is duplicate
+         or low value returns an empty dictionary """
     bodyContent = soup.find("body")
-    listOfWords = list()
-
     # check if url has body
     if bodyContent :
         bodyText = bodyContent.get_text()
@@ -122,14 +156,19 @@ def find_word_frquency(url, resp) ->  dict :
     if lowTextValue(bodyText):
         return dict()
 
-    
     tokenFreq = tokenize(bodyText)
+
+    #if duplicate return 
+    if is_duplicate(tokenFreq):
+        return dict()
+    
     #Check if longest page
     global longest_page
     pageLength = sum(tokenFreq.values())
     if pageLength > longest_page[1]:
         longest_page = (url, pageLength)
     return tokenFreq
+
 
 def createSummaryFile():
     """ Creates summary.txt with the numer of unique URLs and the
@@ -159,18 +198,32 @@ def add_words(dictionary):
             commonWords[word] = count
 
 
-def count_if_unique(url):
+def count(url):
+    """ Counts 3 things:
+      First: The total number of unique URLs visited, 
+      Second: The number of subdomains visited, 
+      Third: The nubmer of times a URL without query part has been crawled """
+    # If URL is unique add it to the list of unique URLs
     if "www." in url:
         url = url.replace("www.", "")
     parsed = urlparse(url)
     urldeletedFragment = parsed._replace(fragment = "").geturl() 
     uniqueURLs.add(urldeletedFragment)
+
+    # If ics.uci.edu subdomains count it
     if "ics.uci.edu" in url:
         subdomain = parsed._replace(scheme= "https", path="",fragment = "", query="").geturl()
         if subdomain in ICS_subdomains:
             ICS_subdomains[subdomain] += 1
         else:
             ICS_subdomains[subdomain] = 1
+
+    # Count the number of crawls for URL without query 
+    URLwithoutQuery = parsed._replace(fragment = "", query="").geturl()
+    if URLwithoutQuery in URLCrawlsCount:
+        URLCrawlsCount[URLwithoutQuery] += 1
+    else:
+        URLCrawlsCount[URLwithoutQuery] = 1
 
 
 def top_words():
@@ -223,6 +276,7 @@ def too_deep(url):
         return True
     return False
 
+
 def lowTextValue(text):
     """ Checks for pages that have low information value. """
     errors = ["Error", "Whoops", "having trouble locating"]
@@ -239,26 +293,28 @@ def lowTextValue(text):
         return True
     return False
 
+
 def removePath(url):
     """ This method keep the host name of the domain and reomves
       all the remaining path"""
     parsedURL = urlparse(url)
     return f"{parsedURL.scheme}://{parsedURL.netloc}"
 
+
 def save_data():
     """ Stores all the data from scraped URLs to save the progress in case program is stopped """
     with open("scrapedData.pickle", "wb") as f:
-        pickle.dump((commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains), f)
+        pickle.dump((commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains, sim_hashes, URLCrawlsCount), f)
 
 
 def load_data(restart):
     """ Loads all the data from previous scraped URLs"""
-    global commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains
+    global commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains, sim_hashes, URLCrawlsCount
     if restart: # If crawler is restarted all data will be reset
         return
     try:
         with open("scrapedData.pickle", "rb") as f:
-            commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains = pickle.load(f)
+            commonWords, uniqueURLs, robots_cache, longest_page, ICS_subdomains, sim_hashes , URLCrawlsCount = pickle.load(f)
     except FileNotFoundError:
         # If the file doesn't exist
         commonWords = {}
@@ -266,3 +322,5 @@ def load_data(restart):
         robots_cache = {}
         longest_page = ("", 0)
         ICS_subdomains = {}
+        sim_hashes = set()
+        URLCrawlsCount= dict()
